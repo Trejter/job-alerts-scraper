@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from filter import is_relevant
 import logging
 
-def scrape_novonordisk():
+def check_novonordisk():
     url = "https://www.novonordisk.com/careers/find-a-job/career-search-results.html?"
     
     headers = {
