@@ -2,6 +2,18 @@ import os
 import time
 import schedule
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+def scrape():
+    logging.info("Starting to scrape...")
+    # Your scraping logic
+    logging.info("Finished scraping.")
+
+if __name__ == "__main__":
+    scrape()
+
 from companies import novonordisk
 from database import init_db, is_new
 from filter import filter_jobs
@@ -28,14 +40,4 @@ if __name__ == "__main__":
         schedule.run_pending()
         time.sleep(60)
 
-import logging
 
-logging.basicConfig(level=logging.INFO)
-
-def scrape():
-    logging.info("Starting to scrape...")
-    # Your scraping logic
-    logging.info("Finished scraping.")
-
-if __name__ == "__main__":
-    scrape()
