@@ -4,7 +4,7 @@ from filter import is_relevant
 import logging
 
 def scrape_novonordisk():
-    url = "https://www.novonordisk.com/your-career/job-opportunities.html"
+    url = "https://www.novonordisk.com/careers/find-a-job/career-search-results.html?"
     
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 \
