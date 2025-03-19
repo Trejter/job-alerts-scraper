@@ -1,16 +1,18 @@
 import requests
+import logging
 
-def fetch_jobs():
-    url = "https://careers.novonordisk.com/jobapi/jobs"
+def check_novonordisk():
+    url = "https://www.novonordisk.com/your-career/job-opportunities.html"
     response = requests.get(url)
-    data = response.json()
-    jobs = []
-    for job in data.get("jobs", []):
-        jobs.append({
-            "id": job["jobId"],
-            "title": job["title"],
-            "url": f"https://careers.novonordisk.com/job/{job['slug']}",
-            "location": job["location"],
-            "date": job["postedDate"],
-        })
-    return jobs
+    
+    if response.status_code != 200:
+        logging.warning(f"Failed to fetch {url} - Status code: {response.status_code}")
+        return
+
+    html = response.text
+
+    # Example logic — you’d replace this with real parsing
+    if "Poland" in html or "Remote" in html:
+        logging.info("✅ Found job(s) matching criteria!")
+    else:
+        logging.info("❌ No jobs found matching criteria.")
