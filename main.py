@@ -1,43 +1,20 @@
-import os
-import time
-import schedule
-
 import logging
+from companies.novonordisk import check_novonordisk
 
-logging.basicConfig(level=logging.INFO)
+# Configure logging to print to stdout with timestamps
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
-def scrape():
-    logging.info("Starting to scrape...")
-    # Your scraping logic
-    logging.info("Finished scraping.")
+def main():
+    logging.info("Starting job scraper...")
 
-if __name__ == "__main__":
-    scrape()
-
-from companies import novonordisk
-from database import init_db, is_new
-from filter import filter_jobs
-from notifier import send_telegram
-
-KEYWORDS = os.getenv("KEYWORDS", "").split(",")
-
-def job_check():
-    print("🔍 Checking for new jobs...")
-    jobs = novonordisk.fetch_jobs()
-    for job in jobs:
-        if is_new(job["id"]):
-            if filter_jobs([job], KEYWORDS):
-                msg = f"🆕 {job['title']}\n📍 {job['location']}\n🔗 {job['url']}"
-                send_telegram(msg)
-                print(f"✅ Sent: {job['title']}")
+    try:
+        check_novonordisk()
+        logging.info("Novo Nordisk check complete.")
+    except Exception as e:
+        logging.error(f"Error during job check: {e}")
 
 if __name__ == "__main__":
-    init_db()
-    schedule.every(15).minutes.do(job_check)
-    print("📡 Job watcher started on Railway...")
-
-    while True:
-        schedule.run_pending()
-        time.sleep(60)
-
-
+    main()
