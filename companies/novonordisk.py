@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 import time
 
 def check_novonordisk():
@@ -22,18 +23,19 @@ def check_novonordisk():
     while True:
         try:
             # Find and click the 'Load More' button
-            load_more_button = driver.find_element_by_xpath('//button[contains(text(), "Load more")]')
+            load_more_button = driver.find_element(By.XPATH, '//button[contains(text(), "Load more")]')
             load_more_button.click()
             time.sleep(2)
         except:
             break  # No more 'Load More' button
 
-    job_elements = driver.find_elements_by_class_name("job-listing-class-name")
+    # Replace `find_elements_by_class_name` with `find_elements`
+    job_elements = driver.find_elements(By.CLASS_NAME, "job-listing-class-name")
     jobs = []
 
     for job in job_elements:
-        title = job.find_element_by_class_name("job-title-class-name").text
-        location = job.find_element_by_class_name("job-location-class-name").text
+        title = job.find_element(By.CLASS_NAME, "job-title-class-name").text
+        location = job.find_element(By.CLASS_NAME, "job-location-class-name").text
         jobs.append({"title": title, "location": location})
 
     driver.quit()
