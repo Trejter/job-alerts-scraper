@@ -1,44 +1,36 @@
-import requests
-from bs4 import BeautifulSoup
-from filter import is_relevant
-import logging
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 def check_novonordisk():
+    options = Options()
+    options.add_argument('--headless')  # Run in headless mode
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
+    # Use WebDriver Manager to automatically handle Chrome driver
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+
     url = "https://www.novonordisk.com/careers/find-a-job/career-search-results.html?"
-    
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 \
-                       (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
-    }
+    driver.get(url)
 
-    try:
-        response = requests.get(url, headers=headers)
-        if response.status_code != 200:
-            logging.warning(f"Failed to fetch {url} - Status code: {response.status_code}")
-            return []
+    # Simulate clicking the 'Show More' button, or use AJAX handling
+    while True:
+        try:
+            # Find and click 'Show More' button
+            show_more_button = driver.find_element_by_xpath('//button[contains(text(), "Show more")]')
+            show_more_button.click()
+            time.sleep(2)
+        except:
+            break  # No more 'Show More' button
 
-        soup = BeautifulSoup(response.text, "html.parser")
+    job_elements = driver.find_elements_by_class_name("job-listing-class-name")
+    jobs = []
 
-        # TODO: This depends on how jobs are listed – may need to adapt
-        job_elements = soup.select(".job-listing")  # <- you'll need to inspect & confirm this selector
+    for job in job_elements:
+        title = job.find_element_by_class_name("job-title-class-name").text
+        location = job.find_element_by_class_name("job-location-class-name").text
+        jobs.append({"title": title, "location": location})
 
-        jobs = []
-        for el in job_elements:
-            title = el.get_text(strip=True)
-            link = el.get("href")
-
-            job = {
-                "title": title,
-                "url": link,
-                "description": "",  # optional: extract preview text if available
-                "company": "Novo Nordisk"
-            }
-
-            if is_relevant(job):
-                jobs.append(job)
-
-        return jobs
-
-    except Exception as e:
-        logging.exception("Error scraping Novo Nordisk")
-        return []
+    driver.quit()
+    return jobs
