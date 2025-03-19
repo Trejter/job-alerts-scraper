@@ -9,8 +9,8 @@ def check_novonordisk():
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
 
-    # Use WebDriver Manager to install the ChromeDriver
-    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    # Initialize WebDriver and pass options separately
+    driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=options)
 
     url = "https://www.novonordisk.com/careers/find-a-job/career-search-results.html?"
     driver.get(url)
