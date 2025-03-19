@@ -3,21 +3,22 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
 def check_novonordisk():
+    # Set Chrome options for headless mode
     options = Options()
     options.add_argument('--headless')  # Run in headless mode
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
 
-    # Use WebDriver Manager to automatically handle Chrome driver
+    # Use WebDriver Manager to install the ChromeDriver
     driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
     url = "https://www.novonordisk.com/careers/find-a-job/career-search-results.html?"
     driver.get(url)
 
-    # Simulate clicking the 'Show More' button, or use AJAX handling
+    # Simulate clicking the 'Show More' button or handle dynamic content
     while True:
         try:
-            # Find and click 'Show More' button
+            # Find and click the 'Show More' button
             show_more_button = driver.find_element_by_xpath('//button[contains(text(), "Show more")]')
             show_more_button.click()
             time.sleep(2)
