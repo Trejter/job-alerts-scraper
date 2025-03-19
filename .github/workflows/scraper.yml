@@ -2,7 +2,7 @@ name: Scrape Job Listings
 
 on:
   schedule:
-    - cron: '*/600 * * * *'  # This runs every 600 minutes
+    - cron: '*/10 * * * *'  # This runs every 600 minutes
 
 jobs:
   scrape:
